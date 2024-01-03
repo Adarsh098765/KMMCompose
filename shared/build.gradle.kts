@@ -19,6 +19,10 @@ kotlin {
     }
 
     sourceSets {
+        val mokoPermissionsVersion = extra["moko.permissions.version"] as String
+        val mokoMvvmVersion = extra["moko.mvvm.version"] as String
+        val mokoBiometryVersion = extra["moko.biometry.version"] as String
+
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
@@ -26,6 +30,11 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                // compose multiplatform
+                implementation("dev.icerock.moko:permissions-compose:$mokoPermissionsVersion")
+                implementation("co.touchlab:kermit:2.0.2")
+                implementation("dev.icerock.moko:mvvm-compose:$mokoMvvmVersion")
+                implementation("dev.icerock.moko:biometry-compose:$mokoBiometryVersion")
             }
         }
         val androidMain by getting {
