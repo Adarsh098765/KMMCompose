@@ -1,6 +1,6 @@
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.screen.Screen
 import dev.icerock.moko.biometry.BiometryAuthenticator
 import dev.icerock.moko.biometry.compose.BindBiometryAuthenticatorEffect
 import dev.icerock.moko.biometry.compose.BiometryAuthenticatorFactory
@@ -20,15 +21,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+class BiometricScreen :Screen{
+    @Composable
+    override fun Content() {
+        NavigationScreen("Biometric"){
+            BiometryScreen()
+        }
+
+    }
+
+}
+
 @Composable
 internal fun BiometryScreen(
-    backAction: () -> Unit
 ) {
     val biometryAuthenticatorFactory: BiometryAuthenticatorFactory =
         rememberBiometryAuthenticatorFactory()
 
     BiometryScreen(
-        backAction = backAction,
         viewModel = getViewModel(
             key = "biometry-screen",
             factory = viewModelFactory {
@@ -42,15 +52,13 @@ internal fun BiometryScreen(
 
 @Composable
 private fun BiometryScreen(
-    backAction: () -> Unit,
     viewModel: BiometryViewModel
-) = NavigationScreen(title = "moko-biometry", backAction = backAction) { paddingValues ->
+) {
     BindBiometryAuthenticatorEffect(viewModel.biometryAuthenticator)
-
     val text: String by viewModel.result.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(paddingValues),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = text)
@@ -60,6 +68,8 @@ private fun BiometryScreen(
         }
     }
 }
+
+
 
 internal class BiometryViewModel(
     val biometryAuthenticator: BiometryAuthenticator

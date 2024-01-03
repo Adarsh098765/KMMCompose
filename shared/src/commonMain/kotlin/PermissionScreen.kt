@@ -1,6 +1,6 @@
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.screen.Screen
 import co.touchlab.kermit.Logger
 import dev.icerock.moko.mvvm.compose.getViewModel
 import dev.icerock.moko.mvvm.compose.viewModelFactory
@@ -23,15 +24,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+class PermissionScreenNavi():Screen{
+    @Composable
+    override fun Content() {
+        NavigationScreen("Permissions"){
+            PermissionsScreen()
+        }
+
+    }
+
+}
+
 @Composable
 internal fun PermissionsScreen(
-    backAction: () -> Unit
 ) {
     val permissionsControllerFactory: PermissionsControllerFactory =
         rememberPermissionsControllerFactory()
 
     PermissionsScreen(
-        backAction = backAction,
         viewModel = getViewModel(
             key = "permissions-screen",
             factory = viewModelFactory {
@@ -43,15 +53,14 @@ internal fun PermissionsScreen(
 
 @Composable
 private fun PermissionsScreen(
-    backAction: () -> Unit,
     viewModel: PermissionsViewModel
-) = NavigationScreen(title = "moko-permissions", backAction = backAction) { paddingValues ->
+){
     BindEffect(viewModel.permissionsController)
 
     val state: String by viewModel.state.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(paddingValues),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = state)
@@ -61,6 +70,7 @@ private fun PermissionsScreen(
         }
     }
 }
+
 
 internal class PermissionsViewModel(
     val permissionsController: PermissionsController

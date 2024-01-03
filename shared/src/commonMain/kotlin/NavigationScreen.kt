@@ -7,19 +7,21 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 
 @Composable
 fun NavigationScreen(
     title: String,
-    backAction: () -> Unit,
     body: @Composable (PaddingValues) -> Unit
 ) {
+    val localNavigator = LocalNavigator.currentOrThrow
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = title) },
                 navigationIcon = {
-                    IconButton(onClick = backAction) {
+                    IconButton(onClick = {localNavigator.pop() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                     }
                 }
